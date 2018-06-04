@@ -34,10 +34,17 @@ fi
 
 if [ "$SS_CONFIG" != "" ]; then
     echo -e "\033[32mStarting shadowsocks......\033[0m"
-    if [ "$SSCLIENT_PORT" != "" ] && [ "$PRIVOXY_PORT" != "" ] && [ "$PROXY_IP" != "" ]; then
+    if [ "$PROXY_IP" != "" ]; then
         echo -e "\033[32mStarting privoxy......\033[0m"
-        echo "listen-address ${PROXY_IP}:${PRIVOXY_PORT}">>/etc/privoxy/config
-        echo "forward-socks5t / 127.0.0.1:${SSCLIENT_PORT} .">>/etc/privoxy/config
+
+        cp /privoxy_config /etc/privoxy/config
+
+        if [ "$PRIVOXY_PORT" != "" ]; then
+            echo "listen-address ${PROXY_IP}:${PRIVOXY_PORT}">>/etc/privoxy/config
+        fi
+        if [ "$SSCLIENT_PORT" != "" ]; then
+            echo "forward-socks5t / localhost:${SSCLIENT_PORT} .">>/etc/privoxy/config
+        fi
         privoxy --no-daemon /etc/privoxy/config &
     fi
     $SS_MODULE $SS_CONFIG

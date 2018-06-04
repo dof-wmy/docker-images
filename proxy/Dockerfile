@@ -61,7 +61,6 @@ RUN apk upgrade --update \
         /var/cache/apk/*
 
 ADD entrypoint.sh /entrypoint.sh
-
-# CMD ["privoxy","--no-daemon","/etc/privoxy/config"]
+ADD privoxy/config /privoxy_config
 
 ENTRYPOINT ["/entrypoint.sh"]
